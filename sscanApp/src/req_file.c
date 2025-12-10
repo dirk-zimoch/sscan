@@ -3,7 +3,7 @@
  *      Original Author: Eric Boucher
  *      Date:            04-09-98
  *
- *	Experimental Physics and Industrial Control System (EPICS)
+ *      Experimental Physics and Industrial Control System (EPICS)
  *
  *      Beamline Controls & Data Acquisition Group
  *      Experimental Facilities Division
@@ -55,21 +55,21 @@ LOCAL MACRO* initMacros(char* macro)
 
     while(!END(macro) && (*macro==' ')) macro++;
     if(END(macro)) return head;
-    
+
     i= 0;
     while(!END(macro) && (*macro!=' ')  && (*macro!=',') && (i<19))
       mc_value[i++]= *(macro++);
     mc_value[i]= '\0';
-    
+
     cur= (MACRO*) malloc(sizeof(MACRO));
     if(!cur) return head;
-    
+
     strcpy(cur->name, mc_name);
     strcpy(cur->value, mc_value);
     cur->nxt= head;
     head= cur;
 
-    while(!END(macro) && (*macro!=',')) macro++; 
+    while(!END(macro) && (*macro!=',')) macro++;
   } while(!END(macro) && (*(macro++)==','));
   return head;
 }
@@ -90,7 +90,7 @@ LOCAL MACRO* readMacro(REQ_FILE* rf)
 {
   char macName[9];
   int i;
-  
+
   req_skipSpace(rf);
 
   if(current(rf)!='$') return NULL;
@@ -113,11 +113,11 @@ LOCAL MACRO* readMacro(REQ_FILE* rf)
 
 /*----------------------------------------------------------------------*/
 /* Open a req file.                                                     */
-/* The current section is set to ALL, ending at the end of the file.	*/
-/* name: the name of the file.						*/
-/* macro: a string containing the macros associated with the file.	*/
-/* return a pointer to a REQ_FILE structure if successful.		*/
-/*	  NULL otherwise.						*/
+/* The current section is set to ALL, ending at the end of the file.    */
+/* name: the name of the file.                                          */
+/* macro: a string containing the macros associated with the file.      */
+/* return a pointer to a REQ_FILE structure if successful.              */
+/*        NULL otherwise.                                               */
 REQ_FILE* req_open_file(char* name, char* macro)
 {
   FILE*     fd;
@@ -147,13 +147,13 @@ REQ_FILE* req_open_file(char* name, char* macro)
 
 /*----------------------------------------------------------------------*/
 /* Close a req file and free the macros associated with it.             */
-/* rf: the req file.		        				*/
+/* rf: the req file.                                                    */
 void req_close_file(REQ_FILE* rf)
 {
   MACRO* mac;
 
   fclose(rf->fd);
-  
+
   while(rf->list_macros){
     mac= rf->list_macros;
     rf->list_macros= mac->nxt;
@@ -164,7 +164,7 @@ void req_close_file(REQ_FILE* rf)
 
 /*----------------------------------------------------------------------*/
 /* Print all macros associated with a req file.                         */
-/* rf: the req file.		        				*/
+/* rf: the req file.                                                    */
 void req_infoMacro(REQ_FILE* rf)
 {
   MACRO* cur;
@@ -179,8 +179,8 @@ void req_infoMacro(REQ_FILE* rf)
 }
 
 /*----------------------------------------------------------------------*/
-/* Print info about the current section of a req file.			*/
-/* rf: the req file.		        				*/
+/* Print info about the current section of a req file.                  */
+/* rf: the req file.                                                    */
 void req_infoSection(REQ_FILE* rf)
 {
   printf("sect_name   = %s\n", rf->sect_name);
@@ -193,10 +193,10 @@ void req_infoSection(REQ_FILE* rf)
 
 /*----------------------------------------------------------------------*/
 /* Locate the file cursor to a  pecifique section of the req file.      */
-/* rf: the req file.							*/
-/* name: the name of the section					*/
-/* return 0 if successful.						*/
-/*       -1 otherwise.							*/
+/* rf: the req file.                                                    */
+/* name: the name of the section                                        */
+/* return 0 if successful.                                              */
+/*       -1 otherwise.                                                  */
 int req_gotoSection(REQ_FILE* rf, char* section)
 {
   char buff[21];
@@ -227,10 +227,10 @@ int req_gotoSection(REQ_FILE* rf, char* section)
 
     if(eos(rf)) return -1;
   }
-    
+
   strcpy(rf->sect_name, section);
   rf->sect_start= ftell(rf->fd)-1;
-  
+
   /* search the end of the section */
   while(!eos(rf) && (current(rf)!='[')) req_skipLine(rf);
 
@@ -245,9 +245,9 @@ int req_gotoSection(REQ_FILE* rf, char* section)
 
 /*----------------------------------------------------------------------*/
 /* Go to the next section in the req file.                              */
-/* rf: the req file.          						*/
-/* return a pointer to the name of the new section if successful	*/
-/*	  NULL otherwise.						*/
+/* rf: the req file.                                                    */
+/* return a pointer to the name of the new section if successful        */
+/*        NULL otherwise.                                               */
 const char* req_nextSection(REQ_FILE* rf)
 {
   int i;
@@ -285,8 +285,8 @@ const char* req_nextSection(REQ_FILE* rf)
 
 /*----------------------------------------------------------------------*/
 /* Get the name of the current section of a req file.                   */
-/* rf: the req file.          						*/
-/* return a pointer to the name of the section.               		*/
+/* rf: the req file.                                                    */
+/* return a pointer to the name of the section.                         */
 const char* req_getSectName(REQ_FILE* rf)
 {
   return rf->sect_name;
@@ -295,37 +295,37 @@ const char* req_getSectName(REQ_FILE* rf)
 
 /*----------------------------------------------------------------------*/
 /* Rewind a req file, ei set the current section to ALL and set the     */
-/* current char to the first char of the file.				*/
-/* rf: the req file.          						*/
+/* current char to the first char of the file.                          */
+/* rf: the req file.                                                    */
 void req_rewindFile(REQ_FILE* rf)
 {
-  fseek(rf->fd, 0, SEEK_SET); 
+  fseek(rf->fd, 0, SEEK_SET);
   rf->sect_start= 0;
   rf->sect_end= -1;
 
   strcpy(rf->sect_name, "ALL");
- 
+
   req_readChar(rf);
   req_skipComment(rf);
 }
 
 /*----------------------------------------------------------------------*/
 /* Rewind a section, ei set the current char to the first char of the   */
-/* current section.							*/
-/* rf: the req file.          						*/
+/* current section.                                                     */
+/* rf: the req file.                                                    */
 void req_rewindSect(REQ_FILE* rf)
 {
   fseek(rf->fd, rf->sect_start, SEEK_SET);
   req_readChar(rf);
   req_skipComment(rf);
 }
-    
+
 
 /*----------------------------------------------------------------------*/
 /* Skip a line.                                                         */
-/* rf: the req file.          						*/
-/* return the value of the first char of the new line or EOS if the	*/
-/* end of section or end of file is reached.				*/
+/* rf: the req file.                                                    */
+/* return the value of the first char of the new line or EOS if the     */
+/* end of section or end of file is reached.                            */
 int req_skipLine(REQ_FILE* rf)
 {
   while(!eos(rf) && (current(rf)!='\n')) req_readChar(rf);
@@ -333,10 +333,10 @@ int req_skipLine(REQ_FILE* rf)
 }
 
 /*----------------------------------------------------------------------*/
-/* Skip space char as defined by isspace()				*/
-/* rf: the req file.          						*/
-/* return the value of the first char not a space or EOS if the		*/
-/* end of section or end of file is reached.				*/
+/* Skip space char as defined by isspace()                              */
+/* rf: the req file.                                                    */
+/* return the value of the first char not a space or EOS if the         */
+/* end of section or end of file is reached.                            */
 int req_skipSpace(REQ_FILE* rf)
 {
   while(isspace(current(rf))) req_readChar(rf);
@@ -344,26 +344,26 @@ int req_skipSpace(REQ_FILE* rf)
 }
 
 /*----------------------------------------------------------------------*/
-/* Skip comment, ie all the lines that follow a # sign.			*/
-/* rf: the req file.          						*/
-/* return the value of the first char after the comments or EOS if the	*/
-/* end of section or end of file is reached.				*/
+/* Skip comment, ie all the lines that follow a # sign.                 */
+/* rf: the req file.                                                    */
+/* return the value of the first char after the comments or EOS if the  */
+/* end of section or end of file is reached.                            */
 int req_skipComment(REQ_FILE* rf)
 {
   while(isspace(current(rf))) req_readChar(rf);
   while(current(rf)=='#') {
     while(!eos(rf) && (current(rf)!='\n')) req_readChar(rf);
     while(isspace(current(rf))) req_readChar(rf);
-  } 
+  }
   return current(rf);
-}  
+}
 
 
 /*----------------------------------------------------------------------*/
-/* Read the next char of a req file.                    		*/
-/* rf: the req file.          						*/
-/* return the value of the next char or EOS if the			*/
-/* end of section or end of file is reached.				*/
+/* Read the next char of a req file.                                    */
+/* rf: the req file.                                                    */
+/* return the value of the next char or EOS if the                      */
+/* end of section or end of file is reached.                            */
 int req_readChar(REQ_FILE* rf)
 {
   if((rf->sect_end!=-1) && (ftell(rf->fd)==rf->sect_end)) rf->cur=EOF;
@@ -372,12 +372,12 @@ int req_readChar(REQ_FILE* rf)
 }
 
 /*----------------------------------------------------------------------*/
-/* Read an identifier from a req file.                  		*/
-/* an identifier is composed of [a-zA-Z0-9_.:]				*/
-/* rf: the req file.          						*/
-/* dest: a pointer to where the id has to be copied.			*/
-/* max: the max number of char to be copied.				*/
-/* return the number of char copied to dest.				*/
+/* Read an identifier from a req file.                                  */
+/* an identifier is composed of [a-zA-Z0-9_.:]                          */
+/* rf: the req file.                                                    */
+/* dest: a pointer to where the id has to be copied.                    */
+/* max: the max number of char to be copied.                            */
+/* return the number of char copied to dest.                            */
 int req_readId(REQ_FILE*rf, char* dest, int max)
 {
   int    i;
@@ -401,13 +401,13 @@ int req_readId(REQ_FILE*rf, char* dest, int max)
 
 
 /*----------------------------------------------------------------------*/
-/* Read a "macroed" identifier from a req file.                  	*/
+/* Read a "macroed" identifier from a req file.                         */
 /* a "macroed" identifier is an identifier in which $(xx) are subtituted*/
-/* by the value of the corresponding macro value.			*/
-/* rf: the req file.          						*/
-/* dest: a pointer to where the id has to be copied.			*/
-/* max: the max number of char to be copied.				*/
-/* return the number of char copied to dest.				*/
+/* by the value of the corresponding macro value.                       */
+/* rf: the req file.                                                    */
+/* dest: a pointer to where the id has to be copied.                    */
+/* max: the max number of char to be copied.                            */
+/* return the number of char copied to dest.                            */
 int req_readMacId(REQ_FILE* rf, char* dest, int max)
 {
   MACRO* mac;
@@ -420,17 +420,17 @@ int req_readMacId(REQ_FILE* rf, char* dest, int max)
 
   req_skipComment(rf);
   while(!eos(rf) && (current(rf)=='$' || isidchar(current(rf))) && (i<max)) {
-    
+
     if(current(rf)=='$') {
       mac= readMacro(rf);
       if(mac==NULL) {
-	*dest= '\0';
-	return -1;
+        *dest= '\0';
+        return -1;
       }
       mc_value= mac->value;
       while((i<max) && !END(mc_value)) {
-	*(dest++)= *(mc_value++);
-	i++;
+        *(dest++)= *(mc_value++);
+        i++;
       }
     } else {
       *(dest++)= current(rf);
@@ -444,11 +444,11 @@ int req_readMacId(REQ_FILE* rf, char* dest, int max)
 }
 
 /*----------------------------------------------------------------------*/
-/* Read a quoted string from a req file.                  		*/
-/* rf: the req file.          						*/
-/* dest: a pointer to where the string has to be copied.		*/
-/* max: the max number of char to be copied.				*/
-/* return the number of char copied to dest.				*/
+/* Read a quoted string from a req file.                                */
+/* rf: the req file.                                                    */
+/* dest: a pointer to where the string has to be copied.                */
+/* max: the max number of char to be copied.                            */
+/* return the number of char copied to dest.                            */
 int req_readString(REQ_FILE*rf, char* dest, int max)
 {
   int    i;
@@ -478,16 +478,16 @@ int req_readString(REQ_FILE*rf, char* dest, int max)
 /* int main() { */
 /*   REQ_FILE* rf; */
 /*   char      buff1[40], buff2[40]; */
-  
+
 /*   rf= req_open_file("saveData.req", "P=rix:"); */
-  
-/* get the IOC prefix							*/
+
+/* get the IOC prefix                               */
 /*   if(req_gotoSection(rf, "prefix")==0) { */
 /*     req_readMacId(rf, buff1, 9); */
 /*   } */
 /*   printf("prefix: %s\n", buff1); */
 
-/*   Connect to saveData_active						*/
+/*   Connect to saveData_active                     */
 /*   if(req_gotoSection(rf, "active")!=0) { */
 /*     printf("section [active] not found\n"); */
 /*     return -1; */
@@ -498,7 +498,7 @@ int req_readString(REQ_FILE*rf, char* dest, int max)
 /*   } */
 /*   printf("active: %s\n", buff1); */
 
-/*   Connect to saveData_message					*/
+/*   Connect to saveData_message                    */
 /*   if(req_gotoSection(rf, "message")!=0) { */
 /*     printf("section [message] not found\n"); */
 /*   } else { */
@@ -509,7 +509,7 @@ int req_readString(REQ_FILE*rf, char* dest, int max)
 /*     } */
 /*   } */
 
-/*   Connect to saveData_fullPathName					*/
+/*   Connect to saveData_fullPathName               */
 /*   if(req_gotoSection(rf, "fullPathName")!=0) { */
 /*     printf("section [fullPathName] not found\n"); */
 /*   } else { */
@@ -520,7 +520,7 @@ int req_readString(REQ_FILE*rf, char* dest, int max)
 /*     } */
 /*   } */
 
-/*   Connect to saveData_scanNumber					*/
+/*   Connect to saveData_scanNumber                 */
 /*   if(req_gotoSection(rf, "counter")!=0) { */
 /*     printf("section [counter] not found\n"); */
 /*     return -1; */
@@ -530,8 +530,8 @@ int req_readString(REQ_FILE*rf, char* dest, int max)
 /*     return -1; */
 /*   } */
 /*   printf("counter: %s\n", buff1); */
-  
-/*   Connect to saveData_fileSystem					*/
+
+/*   Connect to saveData_fileSystem                 */
 /*   if(req_gotoSection(rf, "fileSystem")!=0) { */
 /*     printf("section [fileSystem] not found\n"); */
 /*     return -1; */
@@ -542,7 +542,7 @@ int req_readString(REQ_FILE*rf, char* dest, int max)
 /*   } */
 /*   printf("filesystem: %s\n", buff1); */
 
-/*   Connect to saveData_baseName					*/
+/*   Connect to saveData_baseName                   */
 /*   if(req_gotoSection(rf, "baseName")!=0) { */
 /*     printf("section [baseName] not found\n"); */
 /*     return -1; */
@@ -553,35 +553,35 @@ int req_readString(REQ_FILE*rf, char* dest, int max)
 /*   } */
 /*   printf("baseName: %s\n", buff1); */
 
-/*   Connect all scan records.      					*/
+/*   Connect all scan records.                      */
 /*   if(req_gotoSection(rf, "scanRecord")==0) { */
 /*     while(!eos(rf)) { */
 /*       req_readMacId(rf, buff1, 40); */
 /*       if(current(rf)==',') { */
-/* 	req_readChar(rf); */
-/* 	req_readMacId(rf, buff2, 40); */
+/*         req_readChar(rf); */
+/*         req_readMacId(rf, buff2, 40); */
 /*       } else { */
-/* 	buff2[0]= '\0'; */
+/*         buff2[0]= '\0'; */
 /*       } */
 /*         printf("new scan: %s->%s\n", buff1, buff2); */
 /*     } */
 /*   } */
 
-/*   Connect all extra pvnames      					*/
+/*   Connect all extra pvnames                      */
 /*   if(req_gotoSection(rf, "extraPV")==0) { */
 /*     while(!eos(rf)) { */
 /*       req_readMacId(rf, buff1, 40); */
 /*       if(current(rf)=='"') { */
-/* 	req_readString(rf, buff2, 40); */
+/*         req_readString(rf, buff2, 40); */
 /*       } else { */
-/* 	buff2[0]= '\0'; */
+/*         buff2[0]= '\0'; */
 /*       } */
 /*       printf("extraPV: %s[%s]\n",buff1, buff2); */
 /*     } */
 /*   } */
 
 
-/*   Connect to saveData_realTime1D					*/
+/*   Connect to saveData_realTime1D                 */
 /*   if(req_gotoSection(rf, "realTime1D")!=0) { */
 /*     printf("section [realTime1D] not found\n"); */
 /*   } else { */

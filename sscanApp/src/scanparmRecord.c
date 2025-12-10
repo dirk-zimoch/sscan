@@ -1,34 +1,34 @@
 /* scanparmRecord.c - Record Support Routines for Scanparm record */
 /*
- *	  Original Author: Tim Mooney & Xingyue Li
- *	  Date:			2-21-96
+ *    Original Author: Tim Mooney & Xingyue Li
+ *    Date:         2-21-96
  *
- *	Experimental Physics and Industrial Control System (EPICS)
+ *  Experimental Physics and Industrial Control System (EPICS)
  *
- *	Copyright 1991, the Regents of the University of California,
- *	and the University of Chicago Board of Governors.
+ *  Copyright 1991, the Regents of the University of California,
+ *  and the University of Chicago Board of Governors.
  *
- *	This software was produced under  U.S. Government contracts:
- *	(W-7405-ENG-36) at the Los Alamos National Laboratory,
- *	and (W-31-109-ENG-38) at Argonne National Laboratory.
+ *  This software was produced under  U.S. Government contracts:
+ *  (W-7405-ENG-36) at the Los Alamos National Laboratory,
+ *  and (W-31-109-ENG-38) at Argonne National Laboratory.
  *
- *	Initial development by:
- *		The Controls and Automation Group (AT-8)
- *		Ground Test Accelerator
- *		Accelerator Technology Division
- *		Los Alamos National Laboratory
+ *  Initial development by:
+ *      The Controls and Automation Group (AT-8)
+ *      Ground Test Accelerator
+ *      Accelerator Technology Division
+ *      Los Alamos National Laboratory
  *
- *	Co-developed with
- *		The Controls and Computing Group
- *		Accelerator Systems Division
- *		Advanced Photon Source
- *		Argonne National Laboratory
+ *  Co-developed with
+ *      The Controls and Computing Group
+ *      Accelerator Systems Division
+ *      Advanced Photon Source
+ *      Argonne National Laboratory
  *
- *	  and
- *			  The Beamline Controls & Data Acquisition Group
- *			  Experimental Facilities Division
- *			  Advanced Photon Source
- *			  Argonne National Laboratory
+ *    and
+ *            The Beamline Controls & Data Acquisition Group
+ *            Experimental Facilities Division
+ *            Advanced Photon Source
+ *            Argonne National Laboratory
  *
  * Modification Log:
  * -----------------
@@ -46,21 +46,21 @@
 
 
 
-#include	<string.h>
+#include    <string.h>
 #include        <stdio.h>
 
-#include	<alarm.h>
-#include	<dbDefs.h>
-#include	<dbAccess.h>
-#include	<dbEvent.h>
-#include	<dbFldTypes.h>
-#include	<errMdef.h>
-#include	<special.h>
-#include	<recSup.h>
-#include	<recGbl.h>
-#include	"menuSscan.h"
+#include    <alarm.h>
+#include    <dbDefs.h>
+#include    <dbAccess.h>
+#include    <dbEvent.h>
+#include    <dbFldTypes.h>
+#include    <errMdef.h>
+#include    <special.h>
+#include    <recSup.h>
+#include    <recGbl.h>
+#include    "menuSscan.h"
 #define GEN_SIZE_OFFSET
-#include	"scanparmRecord.h"
+#include    "scanparmRecord.h"
 #undef GEN_SIZE_OFFSET
 #include        <epicsExport.h>
 
@@ -87,24 +87,24 @@ static long get_precision(const struct dbAddr *paddr, long *precision);
 #define get_alarm_double NULL
 
 rset scanparmRSET = {
-	RSETNUMBER,
-	report,
-	initialize,
-	init_record,
-	process,
-	special,
-	get_value,
-	cvt_dbaddr,
-	get_array_info,
-	put_array_info,
-	get_units,
-	get_precision,
-	get_enum_str,
-	get_enum_strs,
-	put_enum_str,
-	get_graphic_double,
-	get_control_double,
-	get_alarm_double
+    RSETNUMBER,
+    report,
+    initialize,
+    init_record,
+    process,
+    special,
+    get_value,
+    cvt_dbaddr,
+    get_array_info,
+    put_array_info,
+    get_units,
+    get_precision,
+    get_enum_str,
+    get_enum_strs,
+    put_enum_str,
+    get_graphic_double,
+    get_control_double,
+    get_alarm_double
 };
 epicsExportAddress(rset, scanparmRSET);
 
@@ -112,188 +112,188 @@ static void monitor();
 
 static long init_record(dbCommon *pcommon, int pass)
 {
-	scanparmRecord *psr = (scanparmRecord *) pcommon;
-	if (pass==0) {
-		psr->vers = VERSION;
-		return(0);
-	}
+    scanparmRecord *psr = (scanparmRecord *) pcommon;
+    if (pass==0) {
+        psr->vers = VERSION;
+        return(0);
+    }
 
-	/* Initialize from any constant inlinks */
-	if (psr->imp.type == CONSTANT) {
-		recGblInitConstantLink(&psr->imp,DBF_SHORT,&psr->mp);
-	}
+    /* Initialize from any constant inlinks */
+    if (psr->imp.type == CONSTANT) {
+        recGblInitConstantLink(&psr->imp,DBF_SHORT,&psr->mp);
+    }
 
-	if (psr->np < 2){
-		psr->np = 2;
-		db_post_events(psr, &psr->np, DBE_VALUE);
-	}
-	psr->lstp = (psr->ep - psr->sp)/(psr->np - 1); /* Previous stepSize */
-	return(0);
+    if (psr->np < 2){
+        psr->np = 2;
+        db_post_events(psr, &psr->np, DBE_VALUE);
+    }
+    psr->lstp = (psr->ep - psr->sp)/(psr->np - 1); /* Previous stepSize */
+    return(0);
 }
 
 
 static long process(dbCommon *pcommon)
 {
-	scanparmRecord *psr = (scanparmRecord *) pcommon;
-	long status=0;
+    scanparmRecord *psr = (scanparmRecord *) pcommon;
+    long status=0;
 
-	status = dbGetLink(&(psr->iact), DBR_SHORT, &(psr->act), NULL, NULL);
-	if (status) return(status);
-	if (scanparmRecordDebug) printf("scanparm(%s):process:act=%d\n",
-		psr->name, psr->act);
+    status = dbGetLink(&(psr->iact), DBR_SHORT, &(psr->act), NULL, NULL);
+    if (status) return(status);
+    if (scanparmRecordDebug) printf("scanparm(%s):process:act=%d\n",
+        psr->name, psr->act);
 
-	status = dbGetLink(&(psr->imp), DBR_LONG, &(psr->mp), NULL, NULL);
-	if (scanparmRecordDebug) printf("scanparm(%s):process:mp=%d\n", psr->name, psr->mp);
-	if (status) return(status);
+    status = dbGetLink(&(psr->imp), DBR_LONG, &(psr->mp), NULL, NULL);
+    if (scanparmRecordDebug) printf("scanparm(%s):process:mp=%d\n", psr->name, psr->mp);
+    if (status) return(status);
 
-	if (psr->np > psr->mp){
-		psr->np = psr->mp;
-		db_post_events(psr, &psr->np, DBE_VALUE);
-	}
-	if (psr->np < 2){
-		psr->np = 2;
-		db_post_events(psr, &psr->np, DBE_VALUE);
-	}
+    if (psr->np > psr->mp){
+        psr->np = psr->mp;
+        db_post_events(psr, &psr->np, DBE_VALUE);
+    }
+    if (psr->np < 2){
+        psr->np = 2;
+        db_post_events(psr, &psr->np, DBE_VALUE);
+    }
 
-	psr->step = (psr->ep - psr->sp)/(psr->np - 1);
+    psr->step = (psr->ep - psr->sp)/(psr->np - 1);
 
-	if (!(psr->act)) {
-		if (psr->load || psr->go) {
-			if (psr->opre.value.pv_link.pvname && 
-				psr->opre.value.pv_link.pvname[0])
-				status = dbPutLink(&(psr->opre), DBR_SHORT, &(psr->pre), 1);
+    if (!(psr->act)) {
+        if (psr->load || psr->go) {
+            if (psr->opre.value.pv_link.pvname &&
+                psr->opre.value.pv_link.pvname[0])
+                status = dbPutLink(&(psr->opre), DBR_SHORT, &(psr->pre), 1);
 
-			if (psr->oppv.value.pv_link.pvname && 
-				psr->oppv.value.pv_link.pvname[0])
-				status = dbPutLink(&(psr->oppv), DBR_STRING, &(psr->ppv), 1);
+            if (psr->oppv.value.pv_link.pvname &&
+                psr->oppv.value.pv_link.pvname[0])
+                status = dbPutLink(&(psr->oppv), DBR_STRING, &(psr->ppv), 1);
 
-			if (psr->orpv.value.pv_link.pvname && 
-				psr->orpv.value.pv_link.pvname[0])
-				status = dbPutLink(&(psr->orpv), DBR_STRING, &(psr->rpv), 1);
+            if (psr->orpv.value.pv_link.pvname &&
+                psr->orpv.value.pv_link.pvname[0])
+                status = dbPutLink(&(psr->orpv), DBR_STRING, &(psr->rpv), 1);
 
-			if (psr->otpv.value.pv_link.pvname && 
-				psr->otpv.value.pv_link.pvname[0])
-				status = dbPutLink(&(psr->otpv), DBR_STRING, &(psr->tpv), 1);
+            if (psr->otpv.value.pv_link.pvname &&
+                psr->otpv.value.pv_link.pvname[0])
+                status = dbPutLink(&(psr->otpv), DBR_STRING, &(psr->tpv), 1);
 
-			if (psr->odpv.value.pv_link.pvname && 
-				psr->odpv.value.pv_link.pvname[0])
-				status = dbPutLink(&(psr->odpv), DBR_STRING, &(psr->dpv), 1);
+            if (psr->odpv.value.pv_link.pvname &&
+                psr->odpv.value.pv_link.pvname[0])
+                status = dbPutLink(&(psr->odpv), DBR_STRING, &(psr->dpv), 1);
 
-			if (psr->osm.value.pv_link.pvname && 
-				psr->osm.value.pv_link.pvname[0])
-				status = dbPutLink(&(psr->osm), DBR_ENUM, &(psr->sm), 1);
+            if (psr->osm.value.pv_link.pvname &&
+                psr->osm.value.pv_link.pvname[0])
+                status = dbPutLink(&(psr->osm), DBR_ENUM, &(psr->sm), 1);
 
-			if (psr->osp.value.pv_link.pvname && 
-				psr->osp.value.pv_link.pvname[0])
-				status = dbPutLink(&(psr->osp), DBR_DOUBLE, &(psr->sp), 1);
+            if (psr->osp.value.pv_link.pvname &&
+                psr->osp.value.pv_link.pvname[0])
+                status = dbPutLink(&(psr->osp), DBR_DOUBLE, &(psr->sp), 1);
 
-			if (psr->oep.value.pv_link.pvname && 
-				psr->oep.value.pv_link.pvname[0])
-				status = dbPutLink(&(psr->oep), DBR_DOUBLE, &(psr->ep), 1);
+            if (psr->oep.value.pv_link.pvname &&
+                psr->oep.value.pv_link.pvname[0])
+                status = dbPutLink(&(psr->oep), DBR_DOUBLE, &(psr->ep), 1);
 
-			if (psr->onp.value.pv_link.pvname && 
-				psr->onp.value.pv_link.pvname[0])
-				status = dbPutLink(&(psr->onp), DBR_LONG, &(psr->np), 1);
+            if (psr->onp.value.pv_link.pvname &&
+                psr->onp.value.pv_link.pvname[0])
+                status = dbPutLink(&(psr->onp), DBR_LONG, &(psr->np), 1);
 
-			if (psr->oar.value.pv_link.pvname && 
-				psr->oar.value.pv_link.pvname[0])
-				status = dbPutLink(&(psr->oar), DBR_ENUM, &(psr->ar), 1);
+            if (psr->oar.value.pv_link.pvname &&
+                psr->oar.value.pv_link.pvname[0])
+                status = dbPutLink(&(psr->oar), DBR_ENUM, &(psr->ar), 1);
 
-			if (psr->oaft.value.pv_link.pvname && 
-				psr->oaft.value.pv_link.pvname[0])
-				status = dbPutLink(&(psr->oaft), DBR_ENUM, &(psr->aft), 1);
-				
-			if (status) return(status);
+            if (psr->oaft.value.pv_link.pvname &&
+                psr->oaft.value.pv_link.pvname[0])
+                status = dbPutLink(&(psr->oaft), DBR_ENUM, &(psr->aft), 1);
 
-			if (psr->go) {
-				if (scanparmRecordDebug) {
-					printf("scanparm(%s):process:starting scan\n", psr->name);
-				}
-				if (psr->oaqt.value.pv_link.pvname && 
-					psr->oaqt.value.pv_link.pvname[0])
-					status = dbPutLink(&(psr->oaqt), DBR_DOUBLE, &(psr->aqt), 1);
+            if (status) return(status);
 
-				if (psr->osc.value.pv_link.pvname && 
-					psr->osc.value.pv_link.pvname[0])
-					status = dbPutLink(&(psr->osc), DBR_SHORT, &(psr->sc), 1);
-				if (status) return(status);
+            if (psr->go) {
+                if (scanparmRecordDebug) {
+                    printf("scanparm(%s):process:starting scan\n", psr->name);
+                }
+                if (psr->oaqt.value.pv_link.pvname &&
+                    psr->oaqt.value.pv_link.pvname[0])
+                    status = dbPutLink(&(psr->oaqt), DBR_DOUBLE, &(psr->aqt), 1);
+
+                if (psr->osc.value.pv_link.pvname &&
+                    psr->osc.value.pv_link.pvname[0])
+                    status = dbPutLink(&(psr->osc), DBR_SHORT, &(psr->sc), 1);
+                if (status) return(status);
 
 #if 0
-				/* if sscan record is in a different ioc, wait for its BUSY field to be
-				 * True before returning.  This defends against being run again while sscan
-				 * record is in the process of starting the scan.  Can't do this if we're
-				 * in the same ioc, because sscan record will run in our task, so we'd be
-				 * waiting for something that won't happen until after we exit.
-				 */
-				if (psr->osc.value.pv_link.pvname && 
-					psr->osc.value.pv_link.pvname[0]) {
-					isRemote = dbNameToAddr(psr->osc.value.pv_link.pvname, &dbAddr);
-					if (isRemote) {
-						/* wait until the scanRecord's BUSY field is True */
-						for (i=0; i<30; i++) {
-							status = dbGetLink(&(psr->iact), DBR_SHORT, &(psr->act), NULL, NULL);
-							if (status) return(status);
-							if (psr->act) break;
-							epicsThreadSleep(0.1);
-						}
-					}
-				}
+                /* if sscan record is in a different ioc, wait for its BUSY field to be
+                 * True before returning.  This defends against being run again while sscan
+                 * record is in the process of starting the scan.  Can't do this if we're
+                 * in the same ioc, because sscan record will run in our task, so we'd be
+                 * waiting for something that won't happen until after we exit.
+                 */
+                if (psr->osc.value.pv_link.pvname &&
+                    psr->osc.value.pv_link.pvname[0]) {
+                    isRemote = dbNameToAddr(psr->osc.value.pv_link.pvname, &dbAddr);
+                    if (isRemote) {
+                        /* wait until the scanRecord's BUSY field is True */
+                        for (i=0; i<30; i++) {
+                            status = dbGetLink(&(psr->iact), DBR_SHORT, &(psr->act), NULL, NULL);
+                            if (status) return(status);
+                            if (psr->act) break;
+                            epicsThreadSleep(0.1);
+                        }
+                    }
+                }
 #endif
-			}
-		}
-	}
+            }
+        }
+    }
 
-	if (psr->go) {
-		if (psr->ogo.value.pv_link.pvname && 
-			psr->ogo.value.pv_link.pvname[0])
-			status = dbPutLink(&(psr->ogo), DBR_SHORT, &(psr->go), 1);
-		psr->go = 0;
-		db_post_events(psr, &psr->go, DBE_VALUE);
-	}
+    if (psr->go) {
+        if (psr->ogo.value.pv_link.pvname &&
+            psr->ogo.value.pv_link.pvname[0])
+            status = dbPutLink(&(psr->ogo), DBR_SHORT, &(psr->go), 1);
+        psr->go = 0;
+        db_post_events(psr, &psr->go, DBE_VALUE);
+    }
 
-	if (psr->load) {
-		if (psr->oload.value.pv_link.pvname && 
-			psr->oload.value.pv_link.pvname[0])
-			status = dbPutLink(&(psr->oload), DBR_SHORT, &(psr->load), 1);
-		psr->load = 0;
-		db_post_events(psr, &psr->load, DBE_VALUE);
-	}
+    if (psr->load) {
+        if (psr->oload.value.pv_link.pvname &&
+            psr->oload.value.pv_link.pvname[0])
+            status = dbPutLink(&(psr->oload), DBR_SHORT, &(psr->load), 1);
+        psr->load = 0;
+        db_post_events(psr, &psr->load, DBE_VALUE);
+    }
 
-	psr->pact = TRUE;
-	recGblGetTimeStamp(psr);
+    psr->pact = TRUE;
+    recGblGetTimeStamp(psr);
 
-	/* check event list */
-	monitor(psr);
+    /* check event list */
+    monitor(psr);
 
-	/* process the forward scan link record */
-	recGblFwdLink(psr);
+    /* process the forward scan link record */
+    recGblFwdLink(psr);
 
-	psr->pact=FALSE;
-	return(status);
+    psr->pact=FALSE;
+    return(status);
 }
 
 static void monitor(psr)
 scanparmRecord *psr;
 {
-	unsigned short monitor_mask;
-	
-	if (psr->step != psr->lstp) {
-		monitor_mask = recGblResetAlarms(psr);
-		db_post_events(psr, &psr->step, monitor_mask|DBE_VALUE);
-		psr->lstp = psr->step;
-	}
+    unsigned short monitor_mask;
+
+    if (psr->step != psr->lstp) {
+        monitor_mask = recGblResetAlarms(psr);
+        db_post_events(psr, &psr->step, monitor_mask|DBE_VALUE);
+        psr->lstp = psr->step;
+    }
 }
 
 static long get_precision(const struct dbAddr *paddr, long *precision)
 {
-	scanparmRecord *psr=(scanparmRecord *)paddr->precord;
+    scanparmRecord *psr=(scanparmRecord *)paddr->precord;
 
-	*precision = psr->prec;
-	if (paddr->pfield == (void *)&psr->vers) {
-		*precision = 2;
-	}
-	else {
-		recGblGetPrec(paddr,precision);
-	}
-	return(0);
+    *precision = psr->prec;
+    if (paddr->pfield == (void *)&psr->vers) {
+        *precision = 2;
+    }
+    else {
+        recGblGetPrec(paddr,precision);
+    }
+    return(0);
 }
