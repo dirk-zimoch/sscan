@@ -105,7 +105,7 @@ Release 2-8-1 - Sept. 1, 2012
 Release 2-8 - Feb 8, 2012
 -------------------------
 
-*   Previously, saveData could not be buit on WIN32 because Windows has no XDR library. The file saveData\_writeXDR.c uses a local implementation (writeXDR) of XDR's file-writing specification that doesn't require any help from the OS. This support runs on any OS, but it's likely to be slower than system implementations, and so should probably be used only for WIN32.
+*   Previously, saveData could not be built on WIN32 because Windows has no XDR library. The file saveData\_writeXDR.c uses a local implementation (writeXDR) of XDR's file-writing specification that doesn't require any help from the OS. This support runs on any OS, but it's likely to be slower than system implementations, and so should probably be used only for WIN32.
 *   Previously, aborting a sscan record that was already idle was treated as an error (special returned -1, which could be confusing to clients, and served no useful purpose). Thanks to Sergey Stepanov for noticing this very long-standing problem.
 *   Previously, saveData did not flush the channel access output buffer after doing cagets for extra PVs. This resulted in some PVs having stale values in the data file - particularly PVs repeated by a PV gateway. Thanks to Wang Xiaoqiang (PSI) for this fix.
 *   Previously, on 64-bit architectures, saveData wrote 2D and higher files with NPTS\*4 extra bytes immediately preceding the name of outer-loop sscan-record names, because it calculated file offsets using sizeof(long) instead of sizeof(epicsInt32). Thanks to Eric Berryman for reporting the problem.
@@ -222,7 +222,7 @@ Release 2-5-3
     Front end for operating on MDA files, uses readMDA, opMDA, and writeMDA from mda.py
     
 *   Fixed problems in the communication between the sscan record and saveData that caused corrupted data files to be written:
-    *   The basic problem was that saveData was getting bufferred data arrays, but an unbuffered copy of the sscan record's CPT field. The sscan record now maintains the field BCPT (bufferred CPT) which is posted when data array buffers are switched.
+    *   The basic problem was that saveData was getting buffered data arrays, but an unbuffered copy of the sscan record's CPT field. The sscan record now maintains the field BCPT (buffered CPT) which is posted when data array buffers are switched.
     *   A second problem was that saveData was not able to put AWAIT=1 quickly enough to stop a very fast scan in time to ensure integrity of the data file. saveData now writes '1' to the sscan record's AAWAIT field on init, and writes '0' if it ever exits (not a supported operation at this time). As a consequence, AAWAIT no longer occurs in the autosave-request file scan\_settings.req.
     *   A remaining problem, thus far seen only on cygwin, is that multidimensional scans can get saveData into trouble because CA monitors sometimes are received by saveData in a different order than they were posted by the sscan records. Currently, neither the sscan record nor saveData defend against this.
 *   Added Dohn Arms' 'mdautils' software in the sscanApp/src directory. This software can convert an MDA file to ascii, print info about an MDA file, and read an MDA file into C data structures.

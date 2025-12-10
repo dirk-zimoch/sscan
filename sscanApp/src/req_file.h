@@ -160,7 +160,7 @@ int req_readId(REQ_FILE*rf, char* dest, int max);
 
 /*----------------------------------------------------------------------*/
 /* Read a "macroed" identifier from a req file.                         */
-/* a "macroed" identifier is an identifier in which $(xx) are subtituted*/
+/* a "macroed" identifier is an identifier in which $(xx) are substituted*/
 /* by the value of the corresponding macro value.                       */
 /* rf: the req file.                                                    */
 /* dest: a pointer to where the id has to be copied.                    */

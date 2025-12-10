@@ -69,7 +69,7 @@ PV (int,    cpt,                "{P}Nfinished", NoMon);         /* number of sca
 PV (short,  running,            "{P}running", NoMon);           /* flag, scan is running, an echo of (busy1||busy2||busy3||busy4) */
 PV (short,  paused,             "{P}paused", NoMon);            /* flag, scan is paused, is true when the scan is actually paused */
 PV (int,    Npauses,            "{P}Npauses", NoMon);           /* number of times scan was paused */
-PV (int,    hangWaitSec,        "{P}hangWaitSec", EvFlag);      /* must wait this long before declaring a hang, probalby ~10min = 600sec  */
+PV (int,    hangWaitSec,        "{P}hangWaitSec", EvFlag);      /* must wait this long before declaring a hang, probably ~10min = 600sec  */
 PV (int,    hungSec,            "{P}hungSec", NoMon);           /* seconds spent hung, reset if scan un-hangs, either 0 or >hangWaitSec */
 PV (string, hungTimeStr,        "{P}hungTimeStr", NoMon);       /* string version of hungSec */
 PV (double, version,            "{P}version", NoMon);           /* version number */
@@ -164,7 +164,7 @@ ss scanProgress {
         } state idle
 
         when (efTest(hangWaitSec_mon)) {            /* length of time do declare a hang changed */
-            sprintf(new_msg, "changed requred time for a hang to %d (sec)", hangWaitSec);
+            sprintf(new_msg, "changed required time for a hang to %d (sec)", hangWaitSec);
             DEBUG_PRINT(1, new_msg);
             efClear(hangWaitSec_mon);
         } state idle
@@ -319,7 +319,7 @@ ss scanProgress {
             pvPut(pauseTimeStr);
 %%          clocks2str(now-startTime,tStr);         /* total execution time on the clock */
             PVPUTSTR(totalElapsedTimeStr,tStr)      /* includes scanning time and pause time */
-            if (fractionDone>0.0) {                 /* uses the prevously computed fractionDone to update end time */
+            if (fractionDone>0.0) {                 /* uses the previously computed fractionDone to update end time */
 %%              remainingSec = (1.0-fractionDone)/fractionDone * (double)(now-startTime-pauseSec);
                 pvPut(remainingSec);
                 predictEnd = now + remainingSec;    /* add remaining seconds to now */
@@ -489,9 +489,9 @@ static void clocks2str(long isec, char *str)
 }
 
 
-/* format clocks to a string containig the date and time" */
+/* format clocks to a string containing the date and time" */
 static void formatTimeStr(
-char *tStr,         /* string to recieve the result */
+char *tStr,         /* string to receive the result */
 int tStrLen,        /* maximum length of tStr */
 time_t final,       /* final time as a time_t, this is what's given */
 int full)           /* when true, always use GeneralDateFMT */

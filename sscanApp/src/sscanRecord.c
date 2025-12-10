@@ -1215,7 +1215,7 @@ process(dbCommon *pcommon)
     }
     checkMonitors(psscan);
 
-    /* do forward link on last scan aquisition */
+    /* do forward link on last scan acquisition */
     if (psscan->busy && (psscan->faze == sscanFAZE_SCAN_DONE) && (psscan->dstate == sscanDSTATE_POSTED)) {
         psscan->busy = 0; POST(&psscan->busy);
         psscan->faze = sscanFAZE_IDLE; POST(&psscan->faze);
@@ -2206,7 +2206,7 @@ checkMonitors(sscanRecord *psscan)
 
         /* Must post events on both pointers, since toggle.  Note that this is
          * merely the notification step of the posting, since these PV's are
-         * arrays.  The actual accociation between PV and data will
+         * arrays.  The actual association between PV and data will
          * occur in get_array_info().
          */
         for (i = 0; i < NUM_POS; i++) {

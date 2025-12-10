@@ -38,7 +38,7 @@ sscan 2-6-3
 sscan 2-6-2
 -----------
 
-*   saveData occassionally writes garbage to the file-version number (the first four bytes of an .mda file).
+*   saveData occasionally writes garbage to the file-version number (the first four bytes of an .mda file).
 
 sscan 2-6-1
 -----------

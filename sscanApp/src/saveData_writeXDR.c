@@ -25,7 +25,7 @@
  * .04 05-25-98  erb  added hand-shaking customisation thru request file
  * .05 05-27-98  erb  added ioc prefix customisation in the request file
  *                    for archive naming convention.
- * .06 07-14-98  erb  Added real-time 1D data aquisition
+ * .06 07-14-98  erb  Added real-time 1D data acquisition
  *                    - changed the file format
  *                    - added debug_saveDataCpt
  *                      0: wait forever for space in message queue, then send message
@@ -37,10 +37,10 @@
  *                      else: don't send message
  * .07 08-03-98  erb  Added environment pv's
  *                    saveData will request data for those env pv's at the
- *                    begining of the scan, but will not wait for answers
+ *                    beginning of the scan, but will not wait for answers
  *                    and save the env data at the end of the scan.
  * .08 08-09-98  erb  bug fixes: time-stamp
- *                    still some work to do: the time stamp is not availlable
+ *                    still some work to do: the time stamp is not available
  *                    when the scan start.
  *
  * .09 09-01-98  erb  First release: version 1.0
@@ -60,7 +60,7 @@
  *                    VERSION 1.1
  * .15 05-06-99  erb  Change EXSC field to DATA and reverse the logic
  *                    Save time stamp when scan starts
- * .16 07-15-99  erb  -Fix the trigger bug for 2D and higer scans.
+ * .16 07-15-99  erb  -Fix the trigger bug for 2D and higher scans.
  *                    -Change version to 1.2 to avoid confusion with
  *                     "invalid 1.1" files.
  *                    -Add the saveData_Version function.
@@ -1221,7 +1221,7 @@ LOCAL int disconnectScan(SCAN* pscan)
 /*----------------------------------------------------------------------*/
 /* start the monitoring of a scan record.                               */
 /* pscan: a pointer to the SCAN structure connected to the scan record. */
-/* return 0 if all monitors have been successfuly added.                */
+/* return 0 if all monitors have been successfully added.                */
 /*        -1 otherwise.                                                 */
 LOCAL int monitorScan(SCAN* pscan, int pass)
 {
@@ -3669,7 +3669,7 @@ LOCAL void proc_file_subdir(STRING_MSG* pmsg)
             }
             /* NULL terminate file_subdirectory */
             *server= *local= '\0';
-            /* skip all trailling '/' */
+            /* skip all trailing '/' */
             while ((*cin!='\0') && (*cin=='/')) cin++;
             /* create directory */
 #ifdef vxWorks
