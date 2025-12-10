@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <epicsTypes.h>
 
-typedef int (*xdrproc_t)();
+typedef int (*xdrproc_t)(FILE *fd, void *data);
 
 extern int write_XDR_Init();
 extern int writeXDR_char(FILE *fd, char *cp);

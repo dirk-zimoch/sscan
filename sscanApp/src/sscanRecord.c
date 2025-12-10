@@ -4090,8 +4090,7 @@ packData(sscanRecord *psscan, int caller)
 
 
 static void
-afterScan(psscan)
-    sscanRecord *psscan;
+afterScan(sscanRecord *psscan)
 {
     recPvtStruct   *precPvt = (recPvtStruct *) psscan->rpvt;
 
@@ -4515,8 +4514,7 @@ doPuts(CALLBACK *pCB)
  */
 
 static void
-adjLinParms(paddr)
-    struct dbAddr  *paddr;
+adjLinParms(struct dbAddr *paddr)
 {
     sscanRecord *psscan = (sscanRecord *) (paddr->precord);
     recPvtStruct   *precPvt = (recPvtStruct *) psscan->rpvt;
@@ -4985,8 +4983,7 @@ adjLinParms(paddr)
  */
 
 static void
-changedNpts(psscan)
-    sscanRecord *psscan;
+changedNpts(sscanRecord *psscan)
 {
 
     recPvtStruct   *precPvt = (recPvtStruct *) psscan->rpvt;
@@ -5099,8 +5096,7 @@ changedNpts(psscan)
 
 
 static long
-checkScanLimits(psscan)
-    sscanRecord *psscan;
+checkScanLimits(sscanRecord *psscan)
 {
 
     recDynLinkPvt  *puserPvt;
@@ -5251,8 +5247,7 @@ checkScanLimits(psscan)
  */
 
 static void
-previewScan(psscan)
-    sscanRecord *psscan;
+previewScan(sscanRecord *psscan)
 {
 
     recPvtStruct   *precPvt = (recPvtStruct *) psscan->rpvt;
@@ -5357,8 +5352,7 @@ previewScan(psscan)
 }
 
 static void
-saveFrzFlags(psscan)
-    sscanRecord *psscan;
+saveFrzFlags(sscanRecord *psscan)
 {
 
     recPvtStruct   *precPvt = (recPvtStruct *) psscan->rpvt;
@@ -5409,8 +5403,7 @@ zeroPosParms(sscanRecord * psscan, unsigned short i)
 }
 
 static void
-resetFrzFlags(psscan)
-    sscanRecord *psscan;
+resetFrzFlags(sscanRecord *psscan)
 {
 
     posFields      *pPos = (posFields *) & psscan->p1pp;
@@ -5434,8 +5427,7 @@ resetFrzFlags(psscan)
 
 /* Restores Freeze Flags to the state they were in */
 static void
-restoreFrzFlags(psscan)
-    sscanRecord *psscan;
+restoreFrzFlags(sscanRecord *psscan)
 {
 
     recPvtStruct   *precPvt = (recPvtStruct *) psscan->rpvt;
