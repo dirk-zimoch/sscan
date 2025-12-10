@@ -1,4 +1,4 @@
-#  databse used with scanProgress.st,   version 1.1
+#  database used with scanProgress.st,   version 1.1
 #  version 1.2, added hangWaitSec and hungTimeStr, hungWaitSec
 #
 grecord(mbbo,"$(P)debug")
