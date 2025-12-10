@@ -720,7 +720,7 @@ LOCAL int fileStatus(char* fname)
 
     errno = 0;
 
-    int len;
+    size_t len;
     char lastChar;
     char *fnameLocal;
 
@@ -1253,7 +1253,7 @@ LOCAL int monitorScan(SCAN* pscan, int pass)
     for (i=0; i<SCAN_NBP; i++) {
         if (pscan->cpxnv[i]!=NULL && pscan->cpxsm[i]!=NULL && pscan->crxnv[i]!=NULL) {
             if (ca_add_event(DBR_SHORT, pscan->cpxnv[i], pxnvMonitor,
-                    (void*)(long)i, 0)!=ECA_NORMAL) {
+                    (void*)(size_t)i, 0)!=ECA_NORMAL) {
                 printf("Unable to monitor %s\n", ca_name(pscan->cpxnv[i]));
                 return -1;
             }
@@ -1263,7 +1263,7 @@ LOCAL int monitorScan(SCAN* pscan, int pass)
                 return -1;
             }
             if (ca_add_event(DBR_SHORT, pscan->crxnv[i], rxnvMonitor,
-                    (void*)(long)i, 0)!=ECA_NORMAL) {
+                    (void*)(size_t)i, 0)!=ECA_NORMAL) {
                 printf("Unable to monitor %s\n", ca_name(pscan->crxnv[i]));
                 return -1;
             }
@@ -1276,7 +1276,7 @@ LOCAL int monitorScan(SCAN* pscan, int pass)
     for (i=0; i<SCAN_NBD; i++) {
         if (pscan->cdxnv[i]!=NULL) {
             if (ca_add_event(DBR_SHORT, pscan->cdxnv[i], dxnvMonitor,
-                    (void*)(long)i, 0)!=ECA_NORMAL) {
+                    (void*)(size_t)i, 0)!=ECA_NORMAL) {
                 printf("Unable to monitor %s\n", ca_name(pscan->cdxnv[i]));
                 return -1;
             }
@@ -1289,12 +1289,12 @@ LOCAL int monitorScan(SCAN* pscan, int pass)
     for (i=0; i<SCAN_NBT; i++) {
         if (pscan->ctxnv[i]!=NULL && pscan->ctxcd[i]!=NULL) {
             if (ca_add_event(DBR_SHORT, pscan->ctxnv[i], txnvMonitor,
-                    (void*)(long)i, 0)!=ECA_NORMAL) {
+                    (void*)(size_t)i, 0)!=ECA_NORMAL) {
                 printf("Unable to monitor %s\n", ca_name(pscan->ctxnv[i]));
                 return -1;
             }
             if (ca_add_event(DBR_FLOAT, pscan->ctxcd[i], txcdMonitor,
-                    (void*)(long)i, 0)!=ECA_NORMAL) {
+                    (void*)(size_t)i, 0)!=ECA_NORMAL) {
                 printf("Unable to monitor %s\n", ca_name(pscan->ctxcd[i]));
                 return -1;
             }
@@ -1615,7 +1615,7 @@ LOCAL void cptMonitor(struct event_handler_args eha)
 /*                                                                      */
 LOCAL void pxnvMonitor(struct event_handler_args eha)
 {
-    sendScanIndexMsgWait(MSG_SCAN_PXNV, (SCAN *) ca_puser(eha.chid), (long) eha.usr, *((dbr_short_t *) eha.dbr));
+    sendScanIndexMsgWait(MSG_SCAN_PXNV, (SCAN *) ca_puser(eha.chid), (int)(size_t) eha.usr, *((dbr_short_t *) eha.dbr));
 }
 
 /*----------------------------------------------------------------------*/
@@ -1631,7 +1631,7 @@ LOCAL void pxsmMonitor(struct event_handler_args eha)
 /*                                                                      */
 LOCAL void rxnvMonitor(struct event_handler_args eha)
 {
-    sendScanIndexMsgWait(MSG_SCAN_RXNV, (SCAN *) ca_puser(eha.chid), (long) eha.usr, *((dbr_short_t *) eha.dbr));
+    sendScanIndexMsgWait(MSG_SCAN_RXNV, (SCAN *) ca_puser(eha.chid), (int)(size_t) eha.usr, *((dbr_short_t *) eha.dbr));
 }
 
 /*----------------------------------------------------------------------*/
@@ -1639,7 +1639,7 @@ LOCAL void rxnvMonitor(struct event_handler_args eha)
 /*                                                                      */
 LOCAL void dxnvMonitor(struct event_handler_args eha)
 {
-    sendScanIndexMsgWait(MSG_SCAN_DXNV, (SCAN *) ca_puser(eha.chid), (long) eha.usr, *((dbr_short_t *) eha.dbr));
+    sendScanIndexMsgWait(MSG_SCAN_DXNV, (SCAN *) ca_puser(eha.chid), (int)(size_t) eha.usr, *((dbr_short_t *) eha.dbr));
 }
 
 
@@ -1648,7 +1648,7 @@ LOCAL void dxnvMonitor(struct event_handler_args eha)
 /*                                                                      */
 LOCAL void txnvMonitor(struct event_handler_args eha)
 {
-    sendScanIndexMsgWait(MSG_SCAN_TXNV, (SCAN *) ca_puser(eha.chid), (long) eha.usr, *((dbr_short_t *) eha.dbr));
+    sendScanIndexMsgWait(MSG_SCAN_TXNV, (SCAN *) ca_puser(eha.chid), (int)(size_t) eha.usr, *((dbr_short_t *) eha.dbr));
 }
 
 /*----------------------------------------------------------------------*/
@@ -1656,7 +1656,7 @@ LOCAL void txnvMonitor(struct event_handler_args eha)
 /*                                                                      */
 LOCAL void txcdMonitor(struct event_handler_args eha)
 {
-    sendScanIndexMsgWait(MSG_SCAN_TXCD, (SCAN *) ca_puser(eha.chid), (long) eha.usr, *((dbr_float_t *) eha.dbr));
+    sendScanIndexMsgWait(MSG_SCAN_TXCD, (SCAN *) ca_puser(eha.chid), (int)(size_t) eha.usr, *((dbr_float_t *) eha.dbr));
 }
 
 /*----------------------------------------------------------------------*/
@@ -1921,8 +1921,8 @@ LOCAL int connectPV(char* pv, char* desc)
     char buff[PVNAME_STRINGSZ];
     long  count;
     int   type;
-    int   len;
-    long  size;
+    size_t len;
+    size_t size;
 
     /* allocate space for the new pv */
     pnode= (PV_NODE*) malloc(sizeof(PV_NODE));
@@ -3202,7 +3202,8 @@ LOCAL void proc_scan_pxnv(SCAN_INDEX_MSG* pmsg)
     int   i;
     short val;
     char  buff[PVNAME_STRINGSZ];
-    int   len, got_it;
+    size_t len;
+    int   got_it;
     epicsTimeStamp now;
 
     pscan= pmsg->pscan;
@@ -3288,7 +3289,8 @@ LOCAL void proc_scan_rxnv(SCAN_INDEX_MSG* pmsg)
     int   i;
     short val;
     char  buff[PVNAME_STRINGSZ];
-    int   len, got_it;
+    size_t len;
+    int   got_it;
     epicsTimeStamp now;
 
     pscan= pmsg->pscan;
@@ -3378,7 +3380,8 @@ LOCAL void proc_scan_dxnv(SCAN_INDEX_MSG* pmsg)
     int   i;
     short val;
     char  buff[PVNAME_STRINGSZ];
-    int   len, got_it;
+    size_t len;
+    int   got_it;
     char  msg[200];
     epicsTimeStamp now;
 
@@ -3458,7 +3461,8 @@ LOCAL void proc_scan_txnv(SCAN_INDEX_MSG* pmsg)
     SCAN* pscan;
     int   i;
     short val;
-    int   len, got_it;
+    size_t len;
+    int   got_it;
     epicsTimeStamp now;
 
     pscan= pmsg->pscan;
@@ -3623,7 +3627,7 @@ LOCAL void remount_file_system(char* filesystem)
     }
 
     if (full_pathname_chid) {
-        ca_array_put(DBR_CHAR, strlen(server_pathname)+1,
+        ca_array_put(DBR_CHAR, (int)strlen(server_pathname)+1,
             full_pathname_chid, server_pathname);
     }
     sendUserMessage(msg);
@@ -3697,7 +3701,7 @@ LOCAL void proc_file_subdir(STRING_MSG* pmsg)
         }
 
         if (full_pathname_chid) {
-            ca_array_put(DBR_CHAR, strlen(server_pathname)+1,
+            ca_array_put(DBR_CHAR, (int)strlen(server_pathname)+1,
                 full_pathname_chid, server_pathname);
         }
         sendUserMessage(msg);
