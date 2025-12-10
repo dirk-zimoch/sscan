@@ -18,4 +18,4 @@ extern int writeXDR_opaque(FILE *fd, char *cp, int cnt);
 extern int writeXDR_bytes(FILE *fd, void *addr, size_t len);
 extern int writeXDR_vector(FILE *fd, char *basep, int nelem, int elemsize, xdrproc_t xdr_elem);
 extern long writeXDR_getpos(FILE *fd);
-extern int writeXDR_setpos(FILE *fd, long pos); 
+extern int writeXDR_setpos(FILE *fd, long pos);

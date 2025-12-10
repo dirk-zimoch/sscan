@@ -3,14 +3,14 @@
  * seqPVmacros.h -- PV-related macros for EPICS State Notation
  *     Language (SNL) code development
  *
- * 2003-Oct-01	[jemian] changed errlogPrintf to printf (can't use in interrupts)
- * 2003-Mar-20	[jemian] changed pvSet to PVPUT (and pvSetStr to PVPUTSTR)
- * 2003-Mar-19	[jemian] changed printf to errlogPrintf
- * 2002-Sep-24	[tischler] added pvSetStr and DEBUG_PRINT (a la Jemian)
- * 2002-Jun-04	[lazmo] renamed to seqPVmacros.h
- * 2002-Mar-08	[lazmo] added pvSet()
- * 2002-Feb-21	[lazmo] fixed comments
- * 2001-Nov-24	[lazmo] added PVA & PVAA
+ * 2003-Oct-01  [jemian] changed errlogPrintf to printf (can't use in interrupts)
+ * 2003-Mar-20  [jemian] changed pvSet to PVPUT (and pvSetStr to PVPUTSTR)
+ * 2003-Mar-19  [jemian] changed printf to errlogPrintf
+ * 2002-Sep-24  [tischler] added pvSetStr and DEBUG_PRINT (a la Jemian)
+ * 2002-Jun-04  [lazmo] renamed to seqPVmacros.h
+ * 2002-Mar-08  [lazmo] added pvSet()
+ * 2002-Feb-21  [lazmo] fixed comments
+ * 2001-Nov-24  [lazmo] added PVA & PVAA
  * 2001-Oct-18  [lazmo] original
  *
  * Author:
@@ -54,8 +54,8 @@
  */
 
 #define PV(_TYPE_,_VAR_,_PV_,_OTHER_)   \
-  _TYPE_   _VAR_;			            \
-  assign   _VAR_ to _PV_		        \
+  _TYPE_   _VAR_;                       \
+  assign   _VAR_ to _PV_                \
   _OTHER_ (_VAR_)
 
 /*----------------------------------------------------------------
@@ -68,13 +68,13 @@
  *   single waveform record:
  *
  *     PVA (short, plot_x0,  32, "{STN}:DATA:PLOT:X0", NoMon);
- *  
+ *
  *   array of PVs:
  *
- *     #define PVA_zap {	\
- *         "{STN}:GUI:ZAP1",	\
- *         "{STN}:GUI:ZAP2",	\
- *         "{STN}:GUI:ZAP3"	\
+ *     #define PVA_zap {        \
+ *         "{STN}:GUI:ZAP1",    \
+ *         "{STN}:GUI:ZAP2",    \
+ *         "{STN}:GUI:ZAP3"     \
  *       }
  *     PVA (int, zap, 3, PVA_zap, EvFlag);
  *
@@ -82,8 +82,8 @@
  */
 
 #define PVA(_TYPE_,_VAR_,_NELEM_,_PV_,_OTHER_)  \
-  _TYPE_   _VAR_ [ _NELEM_ ];			        \
-  assign   _VAR_ to _PV_			            \
+  _TYPE_   _VAR_ [ _NELEM_ ];                   \
+  assign   _VAR_ to _PV_                        \
   _OTHER_ (_VAR_)
 
 /*----------------------------------------------------------------
@@ -96,19 +96,19 @@
  *
  * example:
  *
- *	#define PVAA_plotx {		\
- *	    "{STN}:DATA:PLOT:X1",	\
- *	    "{STN}:DATA:PLOT:X2",	\
- *	    "{STN}:DATA:PLOT:X3"	\
- *	  }
- *	PVAA (short, plotx, 3, 500, PVAA_plotx, NoMon);
+ *  #define PVAA_plotx {        \
+ *      "{STN}:DATA:PLOT:X1",   \
+ *      "{STN}:DATA:PLOT:X2",   \
+ *      "{STN}:DATA:PLOT:X3"    \
+ *    }
+ *  PVAA (short, plotx, 3, 500, PVAA_plotx, NoMon);
  *
  *----------------------------------------------------------------
  */
 
 #define PVAA(_TYPE_,_VAR_,_NREC_,_NELEM_,_PV_,_OTHER_)  \
-  _TYPE_   _VAR_ [ _NREC_ ] [ _NELEM_ ];		        \
-  assign   _VAR_ to _PV_				                \
+  _TYPE_   _VAR_ [ _NREC_ ] [ _NELEM_ ];                \
+  assign   _VAR_ to _PV_                                \
   _OTHER_ (_VAR_)
 
 /*----------------------------------------------------------------
@@ -119,19 +119,19 @@
 /*
  * no monitor
  */
-#define NoMon(_VAR_)	/* this macro intentionally left blank :P */
+#define NoMon(_VAR_)    /* this macro intentionally left blank :P */
 
 /*
  * monitor
  */
 #define Monitor(_VAR_) ; monitor _VAR_
 
-/* 
+/*
  * monitor & event flag; flag var will be named "<var>_EvFlag"
  */
-#define EvFlag(_VAR_)		\
-  Monitor   (_VAR_);		\
-  evflag     _VAR_##_mon;	\
+#define EvFlag(_VAR_)       \
+  Monitor   (_VAR_);        \
+  evflag     _VAR_##_mon;   \
   sync _VAR_ _VAR_##_mon
 
 /*================================================================*/
@@ -226,23 +226,23 @@
 #else
 
 #define DEBUG_PRINT_HEADER(DEBUG_LEVEL) \
-   printf("<%s,%d,%s,%d> ",			    \
-   	__FILE__, __LINE__, 			    \
-	SNLtaskName, DEBUG_LEVEL);
+   printf("<%s,%d,%s,%d> ",             \
+       __FILE__, __LINE__,              \
+    SNLtaskName, DEBUG_LEVEL);
 
-#define DEBUG_PRINT(DEBUG_LEVEL, MSG)		\
-    if (debug_flag >= DEBUG_LEVEL) {		\
+#define DEBUG_PRINT(DEBUG_LEVEL, MSG)       \
+    if (debug_flag >= DEBUG_LEVEL) {        \
         DEBUG_PRINT_HEADER (DEBUG_LEVEL);   \
-        printf("%s\n", MSG);			    \
-        epicsThreadSleep(0.01);			    \
+        printf("%s\n", MSG);                \
+        epicsThreadSleep(0.01);             \
     }
 
 #define DEBUG_PRINT1(DEBUG_LEVEL, MSG, _V1_)    \
-    if (debug_flag >= DEBUG_LEVEL) {		    \
-        DEBUG_PRINT_HEADER (DEBUG_LEVEL);	    \
-        printf(MSG, _V1_);			            \
-        printf("\n");				            \
-        epicsThreadSleep(0.01);			        \
+    if (debug_flag >= DEBUG_LEVEL) {            \
+        DEBUG_PRINT_HEADER (DEBUG_LEVEL);       \
+        printf(MSG, _V1_);                      \
+        printf("\n");                           \
+        epicsThreadSleep(0.01);                 \
     }
 
 #endif
