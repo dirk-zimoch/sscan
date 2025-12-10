@@ -3553,7 +3553,6 @@ LOCAL void remount_file_system(char* filesystem)
 #ifdef vxWorks
     char  hostname[40];
     char *cout;
-    int  i;
     UINT32 savedCacheOptions;
 #endif
 

@@ -2254,7 +2254,6 @@ LOCAL void getExtraPV()
 LOCAL int saveExtraPV(XDR* pxdrs)
 {
     PV_NODE* pcur;
-    chid     channel;
     int      type;
     DBR_VAL* pval;
     long     count;
@@ -2270,7 +2269,6 @@ LOCAL int saveExtraPV(XDR* pxdrs)
         while (pcur) {
             epicsMutexLock(pcur->lock);
 
-            channel= pcur->channel;
             pval= pcur->pval;
 
             cptr= pcur->name;
@@ -3517,8 +3515,8 @@ LOCAL void remount_file_system(char* filesystem)
 {
     char  msg[MAX_STRING_SIZE];
     char *path = local_pathname;
-    int i;
 #ifdef vxWorks
+    int i;
     char  hostname[40];
     char *cout;
 #endif

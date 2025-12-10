@@ -3284,7 +3284,6 @@ contScan(sscanRecord *psscan)
     unsigned short *pPvStat;
     unsigned short *pPvStatPos;
     unsigned short  i;
-    long            status;
     size_t          nRequest = 1;
     double          oldPos, endPos;
 
@@ -3310,10 +3309,10 @@ contScan(sscanRecord *psscan)
                 (*pPvStatPos == PV_OK)) {
                 puserPvt = precPvt->caLinkStruct[i + NUM_POS].puserPvt;
                 if (puserPvt->dbAddrNv || puserPvt->useDynLinkAlways) {
-                    status = recDynLinkGet(&precPvt->caLinkStruct[i + NUM_POS],
+                    recDynLinkGet(&precPvt->caLinkStruct[i + NUM_POS],
                                    &pPos->r_cv, &nRequest, 0, 0, 0);
                 } else {
-                    status = dbGet(puserPvt->pAddr, DBR_DOUBLE, &pPos->r_cv,
+                    dbGet(puserPvt->pAddr, DBR_DOUBLE, &pPos->r_cv,
                                0, 0, NULL);
                 }
 
@@ -3392,7 +3391,7 @@ contScan(sscanRecord *psscan)
                     epicsMutexLock(precPvt->numCallbacksSem);
                     precPvt->numGetCallbacks++;
                     epicsMutexUnlock(precPvt->numCallbacksSem);
-                    status = recDynLinkGetCallback(&precPvt->caLinkStruct[i + NUM_POS],
+                    recDynLinkGetCallback(&precPvt->caLinkStruct[i + NUM_POS],
                                 &nRequest, userGetCallback);
                 }
             }
@@ -3409,7 +3408,7 @@ contScan(sscanRecord *psscan)
                         epicsMutexLock(precPvt->numCallbacksSem);
                         precPvt->numGetCallbacks++;
                         epicsMutexUnlock(precPvt->numCallbacksSem);
-                        status = recDynLinkGetCallback(&precPvt->caLinkStruct[i + D1_IN],
+                        recDynLinkGetCallback(&precPvt->caLinkStruct[i + D1_IN],
                                     &nRequest, userGetCallback);
                     }
                 }
@@ -3445,10 +3444,10 @@ contScan(sscanRecord *psscan)
             puserPvt = precPvt->caLinkStruct[i + NUM_POS].puserPvt;
             if (*pPvStat == PV_OK) {
                 if (puserPvt->dbAddrNv || puserPvt->useDynLinkAlways) {
-                    status = recDynLinkGet(&precPvt->caLinkStruct[i + NUM_POS],
+                    recDynLinkGet(&precPvt->caLinkStruct[i + NUM_POS],
                                    &pPos->r_cv, &nRequest, 0, 0, 0);
                 } else {
-                    status = dbGet(puserPvt->pAddr, DBR_DOUBLE, &pPos->r_cv,
+                    dbGet(puserPvt->pAddr, DBR_DOUBLE, &pPos->r_cv,
                                0, 0, NULL);
                 }
             }
@@ -3482,7 +3481,6 @@ contScan(sscanRecord *psscan)
         }
 
         /* read each valid detector PV, place data in buffered array */
-        status = 0;
         pPvStat = &psscan->d01nv;
         pDet = (detFields *) & psscan->d01hr;
         for (i = 0; i < precPvt->valDetPvs; i++, pDet++, pPvStat++) {
@@ -3490,10 +3488,10 @@ contScan(sscanRecord *psscan)
                 if (*pPvStat == PV_OK) {
                     puserPvt = precPvt->caLinkStruct[i + D1_IN].puserPvt;
                     if (puserPvt->dbAddrNv || puserPvt->useDynLinkAlways) {
-                        status |= recDynLinkGet(&precPvt->caLinkStruct[i + D1_IN],
+                        recDynLinkGet(&precPvt->caLinkStruct[i + D1_IN],
                                     &pDet->d_cv, &nRequest, 0, 0, 0);
                     } else {
-                        status |= dbGet(puserPvt->pAddr, DBR_FLOAT, &pDet->d_cv,
+                        dbGet(puserPvt->pAddr, DBR_FLOAT, &pDet->d_cv,
                                 0, 0, NULL);
                     }
                 } else {
@@ -5259,7 +5257,6 @@ previewScan(sscanRecord *psscan)
     float          *pDetBuf;
     float           value;
     long            i, j;
-    long            status = 0;
     size_t          nRequest = 1;
 
     /* Update "previous position" of positioners to use in relative mode */
@@ -5269,10 +5266,10 @@ previewScan(sscanRecord *psscan)
         if (*pPvStat == PV_OK) {
             puserPvt = precPvt->caLinkStruct[i].puserPvt;
             if (puserPvt->dbAddrNv || puserPvt->useDynLinkAlways) {
-                status |= recDynLinkGet(&precPvt->caLinkStruct[i],
+                recDynLinkGet(&precPvt->caLinkStruct[i],
                      &pPos->p_pp, &nRequest, 0, 0, 0);
             } else {
-                status |= dbGet(puserPvt->pAddr, DBR_DOUBLE, &pPos->p_pp,
+                dbGet(puserPvt->pAddr, DBR_DOUBLE, &pPos->p_pp,
                         0, 0, NULL);
             }
             POST(&pPos->p_pp);
