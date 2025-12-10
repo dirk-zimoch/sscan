@@ -50,7 +50,7 @@ recordtype(sscan) {
 		special(SPC_NOMOD)
 		interest(1)
 	}
-	field(PXSC,DBF_UCHAR) {
+	field(PXSC,DBF_SHORT) {
 		prompt("Previous XScan")
 		special(SPC_NOMOD)
 	}
