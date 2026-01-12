@@ -2244,7 +2244,7 @@ LOCAL void getExtraPV()
             channel, extraValCallback, (void*)pcur);
         pcur= pcur->nxt;
     }
-    ca_flush_io()
+    ca_flush_io();
 }
 
 /*
