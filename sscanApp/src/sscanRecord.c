@@ -552,6 +552,12 @@ typedef struct posFields {
     epicsInt16          p_pr;   /* P1 Display Precision */
 } posFields;
 
+/* make sure that struct posFields matches sscanRecord.dbd file */
+STATIC_ASSERT(sizeof(posFields) == offsetof(sscanRecord,p2pp) - offsetof(sscanRecord,p1pp));
+STATIC_ASSERT(sizeof(posFields) == offsetof(sscanRecord,p3pp) - offsetof(sscanRecord,p2pp));
+STATIC_ASSERT(sizeof(posFields) == offsetof(sscanRecord,p4pp) - offsetof(sscanRecord,p3pp));
+STATIC_ASSERT(sizeof(posFields) == offsetof(sscanRecord,d01hr) - offsetof(sscanRecord,p4pp));
+
 /* the following structure must match EXACTLY with the order and type of
    fields defined in sscanRecord.h for each detector (even including
    the "Created Pad"s  */
@@ -2730,9 +2736,9 @@ pvSearchCallback(recDynLink * precDynLink)
             if (status == OK) {
                 strcpy(pPos->p_eu, precPvt->pDynLinkInfo->units);
 #if LT_EPICSBASE(3,14,10,0)
-                pPos->p_pr = precPvt->pDynLinkInfo->precision;
+                pPos->p_pr = (epicsInt16)precPvt->pDynLinkInfo->precision;
 #else
-                pPos->p_pr = precPvt->pDynLinkInfo->precision.dp;
+                pPos->p_pr = (epicsInt16)precPvt->pDynLinkInfo->precision.dp;
 #endif
                 pPos->p_hr = precPvt->pDynLinkInfo->upper_ctrl_limit;
                 pPos->p_lr = precPvt->pDynLinkInfo->lower_ctrl_limit;
