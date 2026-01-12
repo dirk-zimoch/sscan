@@ -579,7 +579,7 @@ typedef struct string_msg {
 
 #define sendStringMsgWait(t,d,s) { \
     STRING_MSG msg; \
-    msg.type=t; msg.pdest=(char*)d; strncpy(msg.string, s, MAX_STRING_SIZE); \
+    msg.type=t; msg.pdest=d; strncpy(msg.string, s, MAX_STRING_SIZE); \
     epicsTimeGetCurrent(&(msg.time)); \
     epicsMessageQueueSend(msg_queue, (void *)&msg, \
     STRING_SIZE); }
@@ -907,7 +907,7 @@ LOCAL int connectScan(char* name, char* handShake, char* autoHandShake)
     pscan= &pnode->scan;
 
     /* initialize critical fields */
-    memset((void*)pscan, 0, sizeof(SCAN));
+    memset(pscan, 0, sizeof(SCAN));
 
     pscan->data= -1;
 
@@ -943,19 +943,19 @@ LOCAL int connectScan(char* name, char* handShake, char* autoHandShake)
     field= &pvname[strlen(pvname)];
 
     strncpy(field, "DATA", 80-strlen(pvname));
-    ca_search_and_connect(pvname, &(pscan->cdata), NULL, (void*)pscan);
+    ca_search_and_connect(pvname, &(pscan->cdata), NULL, pscan);
 
     strncpy(field, "MPTS", 80-strlen(pvname));
-    ca_search_and_connect(pvname, &(pscan->cmpts), NULL, (void*)pscan);
+    ca_search_and_connect(pvname, &(pscan->cmpts), NULL, pscan);
 
     strncpy(field, "NPTS", 80-strlen(pvname));
-    ca_search_and_connect(pvname, &(pscan->cnpts), NULL, (void*)pscan);
+    ca_search_and_connect(pvname, &(pscan->cnpts), NULL, pscan);
 
     strncpy(field, "CPT", 80-strlen(pvname));
-    ca_search_and_connect(pvname, &(pscan->ccpt), NULL, (void*)pscan);
+    ca_search_and_connect(pvname, &(pscan->ccpt), NULL, pscan);
 
     strncpy(field, "BCPT", 80-strlen(pvname));
-    ca_search_and_connect(pvname, &(pscan->cbcpt), NULL, (void*)pscan);
+    ca_search_and_connect(pvname, &(pscan->cbcpt), NULL, pscan);
 
     if (ca_pend_io(5.0)!= ECA_NORMAL) {
         printf("saveData: Unable to connect to %s\n", pscan->name);
@@ -969,33 +969,33 @@ LOCAL int connectScan(char* name, char* handShake, char* autoHandShake)
     for (i=0; i<SCAN_NBP; i++) {
         pscan->pxnv[i]= XXNV_NOPV;
         strncpy(field, pxnv[i], 80-strlen(pvname));
-        ca_search_and_connect(pvname, &(pscan->cpxnv[i]), NULL, (void*)pscan);
+        ca_search_and_connect(pvname, &(pscan->cpxnv[i]), NULL, pscan);
         strncpy(field, pxpv[i], 80-strlen(pvname));
-        ca_search_and_connect(pvname, &(pscan->cpxpv[i]), NULL, (void*)pscan);
+        ca_search_and_connect(pvname, &(pscan->cpxpv[i]), NULL, pscan);
         strncpy(field, pxsm[i], 80-strlen(pvname));
-        ca_search_and_connect(pvname, &(pscan->cpxsm[i]), NULL, (void*)pscan);
+        ca_search_and_connect(pvname, &(pscan->cpxsm[i]), NULL, pscan);
         pscan->rxnv[i]= XXNV_NOPV;
         strncpy(field, rxnv[i], 80-strlen(pvname));
-        ca_search_and_connect(pvname, &(pscan->crxnv[i]), NULL, (void*)pscan);
+        ca_search_and_connect(pvname, &(pscan->crxnv[i]), NULL, pscan);
         strncpy(field, rxpv[i], 80-strlen(pvname));
-        ca_search_and_connect(pvname, &(pscan->crxpv[i]), NULL, (void*)pscan);
+        ca_search_and_connect(pvname, &(pscan->crxpv[i]), NULL, pscan);
         strncpy(field, pxra[i], 80-strlen(pvname));
-        ca_search_and_connect(pvname, &(pscan->cpxra[i]), NULL, (void*)pscan);
+        ca_search_and_connect(pvname, &(pscan->cpxra[i]), NULL, pscan);
         strncpy(field, rxcv[i], 80-strlen(pvname));
-        ca_search_and_connect(pvname, &(pscan->crxcv[i]), NULL, (void*)pscan);
+        ca_search_and_connect(pvname, &(pscan->crxcv[i]), NULL, pscan);
     }
 
     /*------------------------- DETECTORS --------------------------------*/
     for (i=0; i<SCAN_NBD; i++) {
         pscan->dxnv[i]= XXNV_NOPV;
         strncpy(field, dxnv[i], 80-strlen(pvname));
-        ca_search_and_connect(pvname, &(pscan->cdxnv[i]), NULL, (void*)pscan);
+        ca_search_and_connect(pvname, &(pscan->cdxnv[i]), NULL, pscan);
         strncpy(field, dxpv[i], 80-strlen(pvname));
-        ca_search_and_connect(pvname, &(pscan->cdxpv[i]), NULL, (void*)pscan);
+        ca_search_and_connect(pvname, &(pscan->cdxpv[i]), NULL, pscan);
         strncpy(field, dxda[i], 80-strlen(pvname));
-        ca_search_and_connect(pvname, &(pscan->cdxda[i]), NULL, (void*)pscan);
+        ca_search_and_connect(pvname, &(pscan->cdxda[i]), NULL, pscan);
         strncpy(field, dxcv[i], 80-strlen(pvname));
-        ca_search_and_connect(pvname, &(pscan->cdxcv[i]), NULL, (void*)pscan);
+        ca_search_and_connect(pvname, &(pscan->cdxcv[i]), NULL, pscan);
     }
 
     /*------------------------- TRIGGERS ---------------------------------*/
@@ -1003,11 +1003,11 @@ LOCAL int connectScan(char* name, char* handShake, char* autoHandShake)
         pscan->txnv[i]= XXNV_NOPV;
         pscan->txsc[i]= 1;  /* presume NOT linked to another sscan record */
         strncpy(field, txnv[i], 80-strlen(pvname));
-        ca_search_and_connect(pvname, &(pscan->ctxnv[i]), NULL, (void*)pscan);
+        ca_search_and_connect(pvname, &(pscan->ctxnv[i]), NULL, pscan);
         strncpy(field, txpv[i], 80-strlen(pvname));
-        ca_search_and_connect(pvname, &(pscan->ctxpv[i]), NULL, (void*)pscan);
+        ca_search_and_connect(pvname, &(pscan->ctxpv[i]), NULL, pscan);
         strncpy(field, txcd[i], 80-strlen(pvname));
-        ca_search_and_connect(pvname, &(pscan->ctxcd[i]), NULL, (void*)pscan);
+        ca_search_and_connect(pvname, &(pscan->ctxcd[i]), NULL, pscan);
     }
 
     if (ca_pend_io(5.0)!= ECA_NORMAL) {
@@ -1232,7 +1232,7 @@ LOCAL int monitorScan(SCAN* pscan, int pass)
 
     if (pass==0) {
         if (ca_add_event(DBR_TIME_SHORT, pscan->cdata,
-                dataMonitor, (void*)NULL, 0)!=ECA_NORMAL) {
+                dataMonitor, NULL, 0)!=ECA_NORMAL) {
             printf("Unable to monitor %s\n", ca_name(pscan->cdata));
             return -1;
         }
@@ -1244,7 +1244,7 @@ LOCAL int monitorScan(SCAN* pscan, int pass)
         return -1;
     }
     if (ca_add_event(DBR_LONG, pscan->cnpts,
-            nptsMonitor, (void*)NULL, 0)!=ECA_NORMAL) {
+            nptsMonitor, NULL, 0)!=ECA_NORMAL) {
         printf("Unable to monitor %s\n", ca_name(pscan->cnpts));
         return -1;
     }
@@ -1257,7 +1257,7 @@ LOCAL int monitorScan(SCAN* pscan, int pass)
                 return -1;
             }
             if (ca_add_event(DBR_STRING, pscan->cpxsm[i], pxsmMonitor,
-                    (void*)pscan->pxsm[i], 0)!=ECA_NORMAL) {
+                    pscan->pxsm[i], 0)!=ECA_NORMAL) {
                 printf("Unable to monitor %s\n", ca_name(pscan->cpxsm[i]));
                 return -1;
             }
@@ -1622,7 +1622,7 @@ LOCAL void pxnvMonitor(struct event_handler_args eha)
 /*                                                                      */
 LOCAL void pxsmMonitor(struct event_handler_args eha)
 {
-    sendStringMsgWait(MSG_SCAN_PXSM, (char *)eha.usr, eha.dbr);
+    sendStringMsgWait(MSG_SCAN_PXSM, eha.usr, eha.dbr);
 }
 
 /*----------------------------------------------------------------------*/
@@ -1663,7 +1663,7 @@ LOCAL void txcdMonitor(struct event_handler_args eha)
 /*                                                                      */
 LOCAL void descMonitor(struct event_handler_args eha)
 {
-    sendStringMsgWait(MSG_DESC, (char *)eha.usr, eha.dbr);
+    sendStringMsgWait(MSG_DESC, eha.usr, eha.dbr);
 }
 
 
@@ -1864,7 +1864,7 @@ LOCAL void extraValCallback(struct event_handler_args eha)
 
     switch(type) {
     case DBR_STRING:
-        size= strlen((char*)pval);
+        size= strlen(pval->strval);
         /* logMsg("extraValCallback: count=%d, strlen=%d\n", count, size); */
         break;
     case DBR_CTRL_CHAR:
@@ -1890,9 +1890,9 @@ LOCAL void extraValCallback(struct event_handler_args eha)
 
     memcpy(pnode->pval, pval, size);
     if (type == DBR_STRING) {
-        string = (char *)pnode->pval;
+        string = pnode->pval->strval;
         string[size>(MAX_STRING_SIZE-1)?(MAX_STRING_SIZE-1):size] = '\0';
-        /* logMsg("extraValCallback: string is >%s<\n", (char *)(pnode->pval)); */
+        /* logMsg("extraValCallback: string is >%s<\n", pnode->pval->strval); */
     }
     pnode->count= count;
 
@@ -1906,7 +1906,7 @@ LOCAL void extraDescCallback(struct event_handler_args eha)
 
     epicsMutexLock(pnode->lock);
 
-    strncpy(pnode->desc, (char *)pval, MAX_STRING_SIZE);
+    strncpy(pnode->desc, pval->strval, MAX_STRING_SIZE);
     if (pnode->desc_chid) ca_clear_channel(pnode->desc_chid);
 
     epicsMutexUnlock(pnode->lock);
@@ -1994,7 +1994,7 @@ LOCAL int connectPV(char* pv, char* desc)
     pnode->lock = epicsMutexCreate();
     /* Get a first image of the pv's value */
     ca_array_get_callback(pnode->dbr_type, count,
-        pnode->channel, extraValCallback, (void*)pnode);
+        pnode->channel, extraValCallback, pnode);
 
     /* Get the pv's description */
     if (!desc || (*desc=='\0')) {
@@ -2011,7 +2011,7 @@ LOCAL int connectPV(char* pv, char* desc)
             if (pnode->desc_chid) ca_clear_channel(pnode->desc_chid);
         } else {
             ca_array_get_callback(DBR_STRING, 1, pnode->desc_chid,
-                extraDescCallback, (void*)pnode);
+                extraDescCallback, pnode);
         }
     } else {
         /* Copy the description from the req file. */
@@ -2254,7 +2254,7 @@ LOCAL void getExtraPV()
     while (pcur) {
         channel= pcur->channel;
         if (channel) ca_array_get_callback(pcur->dbr_type, ca_element_count(channel),
-            channel, extraValCallback, (void*)pcur);
+            channel, extraValCallback, pcur);
         pcur= pcur->nxt;
     }
     ca_flush_io();
@@ -2555,7 +2555,7 @@ LOCAL int writeScanRecInProgress(SCAN *pscan, epicsTimeStamp stamp, int isRetry)
         /* reserve file space for data */
         if (fseek(fd, data_size-1, SEEK_CUR)==EOF) {writeFailed = TRUE; goto cleanup;}
         cval = 0;
-        fwrite((void*)&cval, 1,1, fd);
+        fwrite(&cval, 1,1, fd);
     }
 
     if (pscan->old_npts < pscan->npts) {
