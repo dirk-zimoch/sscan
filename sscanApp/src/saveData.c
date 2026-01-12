@@ -3325,7 +3325,7 @@ LOCAL void proc_scan_rxnv(SCAN_INDEX_MSG* pmsg)
             if ((strcmp(pscan->rxpv[i], "time")==0) ||
                  (strcmp(pscan->rxpv[i], "TIME")==0)) {
                 pscan->rxnv[i]=XXNV_OK;
-                strncpy(pscan->rxeu[i].units, "second", MAX_UNITS_SIZE);
+                strncpy(pscan->rxeu[i].units, "second", sizeof(pscan->rxeu[i].units));
             } else {
                 pscan->rxpv[i][0]='\0';
             }

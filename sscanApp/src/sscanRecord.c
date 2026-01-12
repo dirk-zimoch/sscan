@@ -2036,15 +2036,15 @@ get_units(struct dbAddr *paddr, char *units)
     if (fieldIndex >= sscanRecordP1PP) {
         i = (fieldIndex - sscanRecordP1PP) / (sscanRecordP2PP - sscanRecordP1PP);
         if (i>=0 && i<NUM_POS) {
-            strncpy(units, pPos[i].p_eu, 7);
-            units[7] = 0;
+            strncpy(units, pPos[i].p_eu, DB_UNITS_SIZE);
+            units[DB_UNITS_SIZE-1] = 0;
             return(0);
         }
     } else if (fieldIndex >= sscanRecordD01HR) {
         i = (fieldIndex - sscanRecordD01HR) / (sscanRecordD02HR - sscanRecordD01HR);
         if (i>=0 && i<NUM_DET) {
-            strncpy(units, pDet[i].d_eu, 7);
-            units[7] = 0;
+            strncpy(units, pDet[i].d_eu, DB_UNITS_SIZE);
+            units[DB_UNITS_SIZE-1] = 0;
             return(0);
         }
     }

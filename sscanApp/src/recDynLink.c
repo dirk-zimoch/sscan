@@ -157,7 +157,7 @@ typedef struct dynLinkPvt{
     short       caType;
     double      graphicLow,graphHigh;
     double      controlLow,controlHigh;
-    char        units[MAX_UNITS_SIZE];
+    char        units[16];
     short       precision;
     ioType      io;
     stateType       state;
@@ -428,7 +428,7 @@ long epicsShareAPI recDynLinkGetUnits(recDynLink *precDynLink,char *units,int ma
 
     pdynLinkPvt = precDynLink->pdynLinkPvt;
     if (pdynLinkPvt->state!=stateConnected) return(-1);
-    maxToCopy = MAX_UNITS_SIZE;
+    maxToCopy = sizeof(pdynLinkPvt->units);
     if (maxlen<maxToCopy) maxToCopy = maxlen;
     strncpy(units,pdynLinkPvt->units,maxToCopy);
     if (maxToCopy<maxlen) units[maxToCopy] = '\0';
@@ -622,7 +622,7 @@ LOCAL void getCallback(struct event_handler_args eha)
     pdynLinkPvt -> controlLow = pdata->lower_ctrl_limit;
     pdynLinkPvt -> controlHigh = pdata->upper_ctrl_limit;
     pdynLinkPvt -> precision = pdata->precision;
-    strncpy(pdynLinkPvt->units,pdata->units,MAX_UNITS_SIZE);
+    strncpy(pdynLinkPvt->units,pdata->units,sizeof(pdynLinkPvt->units));
     if (pdynLinkPvt->scalar) {
         pdynLinkPvt->nRequest = 1;
     } else {
