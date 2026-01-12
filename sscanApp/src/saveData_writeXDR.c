@@ -358,8 +358,8 @@ typedef struct scan {
     short        state;       /* state of the structure                   */
     char         name[PVNAME_STRINGSZ];    /* name of the scan            */
     short        scan_dim;    /* dimension of this scan                   */
-    char         fname[FNAMELEN+1];  /* filename                          */
-    char         ffname[FNAMELEN+1]; /* full filename                     */
+    char         fname[FNAMELEN];    /* filename                          */
+    char         ffname[FNAMELEN];   /* full filename                     */
     int          first_scan;  /* true if this is the first scan           */
     struct scan* nxt;         /* link to the inner scan                   */
     long         savedSeekPos; /* position at which failed write started  */
@@ -579,7 +579,7 @@ typedef struct string_msg {
 
 #define sendStringMsgWait(t,d,s) { \
     STRING_MSG msg; \
-    msg.type=t; msg.pdest=d; strncpy(msg.string, s, MAX_STRING_SIZE); \
+    msg.type=t; msg.pdest=d; strncpy(msg.string, s, MAX_STRING_SIZE); msg.string[MAX_STRING_SIZE-1]=0; \
     epicsTimeGetCurrent(&(msg.time)); \
     epicsMessageQueueSend(msg_queue, (void *)&msg, \
     STRING_SIZE); }
@@ -914,8 +914,8 @@ LOCAL int connectScan(char* name, char* handShake, char* autoHandShake)
 
     pscan->first_scan= TRUE;
     pscan->scan_dim= 1;
-    strncpy(pscan->name, name, PVNAME_STRINGSZ-1);
-    pscan->name[PVNAME_STRINGSZ-1]='\0';
+    strncpy(pscan->name, name, PVNAME_STRINGSZ);
+    pscan->name[PVNAME_STRINGSZ-1] = 0;
     pscan->nxt= NULL;
     epicsTimeGetCurrent(&(pscan->cpt_time));
     pscan->cpt_monitored= FALSE;
@@ -2907,6 +2907,7 @@ LOCAL void proc_scan_data(SCAN_TS_SHORT_MSG* pmsg)
             /* Make file name */
             if (scanFile_basename[0] == '\0') {
                 strncpy(scanFile_basename, ioc_prefix, BASENAME_SIZE);
+                scanFile_basename[BASENAME_SIZE-1] = 0;
             }
             epicsSnprintf(pscan->fname, FNAMELEN, "%s%.4d.mda", scanFile_basename, (int)pscan->counter);
 #ifdef vxWorks
@@ -3257,7 +3258,7 @@ LOCAL void proc_scan_pxsm(STRING_MSG* pmsg)
 {
     epicsTimeStamp now;
 
-    strncpy(pmsg->pdest, pmsg->string, MAX_STRING_SIZE-1);
+    strncpy(pmsg->pdest, pmsg->string, MAX_STRING_SIZE);
     pmsg->pdest[MAX_STRING_SIZE-1]='\0';
 
     epicsTimeGetCurrent(&now);
@@ -3503,7 +3504,7 @@ LOCAL void proc_desc(STRING_MSG* pmsg)
 {
     epicsTimeStamp now;
 
-    strncpy(pmsg->pdest, pmsg->string, MAX_STRING_SIZE-1);
+    strncpy(pmsg->pdest, pmsg->string, MAX_STRING_SIZE);
     pmsg->pdest[MAX_STRING_SIZE-1]= '\0';
 
     epicsTimeGetCurrent(&now);
@@ -3515,8 +3516,8 @@ LOCAL void proc_egu(STRING_MSG* pmsg)
 {
     epicsTimeStamp now;
 
-    strncpy(pmsg->pdest, pmsg->string, 15);
-    pmsg->pdest[15]= '\0';
+    strncpy(pmsg->pdest, pmsg->string, EGU_SIZE);
+    pmsg->pdest[EGU_SIZE-1]= '\0';
 
     epicsTimeGetCurrent(&now);
     DebugMsg2(2, "MSG_EGU(%s)= %f\n", pmsg->string,
