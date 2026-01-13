@@ -921,7 +921,8 @@ process(dbCommon *pcommon)
     recPvtStruct   *precPvt = (recPvtStruct *) psscan->rpvt;
     long            status = 0;
     epicsTimeStamp  timeCurrent;
-    int numPosCb, numTrigCb, numAReadCb, numGetCb, badPv;
+    short numPosCb, numTrigCb, numAReadCb, numGetCb;
+    unsigned char   badPv;
 
     epicsMutexLock(precPvt->numCallbacksSem);
     numPosCb = precPvt->numPositionerCallbacks;
@@ -1083,8 +1084,8 @@ process(dbCommon *pcommon)
         if (psscan->paus) {
             sprintf(psscan->smsg, "Scan is paused");
         } else {
-            sprintf(psscan->smsg, "Already busy! PTAG_CBs=%1d_%1d_%1d_%02d; CB=0x%x", numPosCb,
-                numTrigCb, numAReadCb, numGetCb, precPvt->calledBy);
+            snprintf(psscan->smsg, sizeof(psscan->smsg), "Already busy! PTAG_CBs=%1d_%1d_%1d_%02d; CB=0x%x",
+                numPosCb, numTrigCb, numAReadCb, numGetCb, precPvt->calledBy);
         }
         POST(&psscan->smsg);
         /*precPvt->calledBy = UNKNOWN;*/
@@ -1095,8 +1096,8 @@ process(dbCommon *pcommon)
         /* Brand new scan */
 
         if (psscan->busy) {
-            sprintf(psscan->smsg, "Still busy! PTAG_CBs=%1d_%1d_%1d_%02d; CB=0x%x", numPosCb,
-                numTrigCb, numAReadCb, numGetCb, precPvt->calledBy);
+            snprintf(psscan->smsg, sizeof(psscan->smsg), "Still busy! PTAG_CBs=%1d_%1d_%1d_%02d; CB=0x%x",
+                numPosCb, numTrigCb, numAReadCb, numGetCb, precPvt->calledBy);
             /*precPvt->calledBy = UNKNOWN;*/
             return (status);
         }
